@@ -114,6 +114,14 @@
     }
 
     render();
+
+    // 계정 동기화 모듈(work-memo-sync.js)이 서버에서 메모를 받아온 뒤
+    // 목록을 다시 그릴 수 있도록 최소한의 창구만 열어 둡니다.
+    // (로그인하지 않으면 아무도 호출하지 않으므로 기존 동작과 동일합니다)
+    window.WorkMemo = {
+      reload: function () { memos = getMemos(); render(); },
+      getAll: function () { return memos.slice(); }
+    };
   });
 
   function escapeHtml(str) {

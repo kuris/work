@@ -56,11 +56,23 @@
   }
 
   // ---------- 계산 결과 저장 ----------
+  //  같은 입력으로 다시 계산하면 새 줄이 생기지 않고 횟수만 늘어납니다.
+  //  입력이 달라지면 별개의 기록으로 남아 "여러 상품 비교" 가 가능합니다.
+  function hashOf(v) {
+    var str;
+    try { str = typeof v === 'string' ? v : JSON.stringify(v); } catch (e) { str = String(v); }
+    if (!str) return '0';
+    var h = 0;
+    for (var i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) | 0; }
+    return Math.abs(h).toString(36);
+  }
+
   async function saveCalc(o) {
     if (!loggedIn() || !o || !o.id) return false;
+    var key = o.key || hashOf(o.meta && o.meta.input ? o.meta.input : (o.meta || o.title));
     return CG().touchRecent({
       kind: 'calc',
-      id: String(o.id) + '::' + (o.key || Date.now()),
+      id: String(o.id) + '::' + key,
       title: o.title || pageTitle(),
       url: o.url || pageUrl(),
       meta: o.meta || null

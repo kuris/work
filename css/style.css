@@ -783,3 +783,15 @@ body {
     flex-direction: column;
   }
 }
+
+/* ---------- 애드센스 클린 슬롯 (다른 사이트 동일 방식) ---------- */
+.ad-slot,
+.ad-placeholder {
+  margin: 24px auto;
+  min-height: 1px;
+  text-align: center;
+  clear: both;
+}
+.ad-placeholder {
+  display: none;
+}

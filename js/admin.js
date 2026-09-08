@@ -28,14 +28,14 @@
 
   // 다른 프로젝트 관리자 페이지 목록 (서비스 전환용)
   const SERVICES = [
-    { key: 'hanja',    name: '한자야 놀자!',     emoji: '漢', url: 'https://hanja.chatgpts.kr/admin' },
-    { key: 'voca',     name: '단어야 놀자!',     emoji: '單', url: 'https://voca.chatgpts.kr/admin' },
-    { key: 'history',  name: '역사야 놀자!',     emoji: '史', url: 'https://history.chatgpts.kr/admin' },
-    { key: 'fortune',  name: '운세야 놀자!',     emoji: '運', url: 'https://fortune.chatgpts.kr/admin' },
-    { key: 'mindtest', name: '마인드테스트',     emoji: '心', url: 'https://mindtest.chatgpts.kr/admin' },
-    { key: 'work',     name: '워크야 놀자',     emoji: '職', url: 'https://work.chatgpts.kr/admin' },
-    { key: 'money',    name: '머니야 놀자',     emoji: '財', url: 'https://money.chatgpts.kr/admin' },
-    { key: 'tools',    name: '문서야 놀자',     emoji: '文', url: 'https://tools.chatgpts.kr/admin' }
+    { key: 'hanja',    name: '한자야 놀자',   emoji: '漢', url: 'https://hanja.chatgpts.kr/admin' },
+    { key: 'voca',     name: '단어야 놀자',   emoji: '單', url: 'https://voca.chatgpts.kr/admin' },
+    { key: 'history',  name: '역사야 놀자',   emoji: '史', url: 'https://history.chatgpts.kr/admin' },
+    { key: 'fortune',  name: '운세야 놀자',   emoji: '運', url: 'https://fortune.chatgpts.kr/admin' },
+    { key: 'mindtest', name: '마인드테스트',  emoji: '心', url: 'https://mindtest.chatgpts.kr/admin' },
+    { key: 'work',     name: '워크야 놀자',   emoji: '職', url: 'https://work.chatgpts.kr/admin' },
+    { key: 'money',    name: '머니야 놀자',   emoji: '財', url: 'https://money.chatgpts.kr/admin' },
+    { key: 'tools',    name: '문서야 놀자',   emoji: '文', url: 'https://tools.chatgpts.kr/admin' }
   ];
 
   const sb = () => window.sbAdmin || null;

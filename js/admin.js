@@ -165,15 +165,37 @@
   //    - 권한 없는 계정 → 권한 없음 화면 (데이터 요청 자체를 하지 않음)
   //    - 관리자        → 대시보드
   // ============================================================
+  // ---------- 관리자 판정 (공통 기준) ----------
+  //   1순위: public.profiles.role === 'admin'
+  //   2순위: ADMIN_CONFIG.adminEmails 목록
+  //          profiles 마이그레이션 전이거나 조회에 실패해도 관리자가 잠기지 않도록
+  //          기존 이메일 기준을 폴백으로 남겨 둡니다.
+  let currentRole = null;
+
+  async function fetchRole(user) {
+    if (!user || !sb()) return null;
+    try {
+      const { data, error } = await sb()
+        .from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (error) throw error;
+      return (data && data.role) || null;
+    } catch (e) {
+      console.warn('[admin] profiles.role 조회 실패 - 이메일 기준으로 판정합니다:', e.message || e);
+      return null;
+    }
+  }
+
   function isAdminUser(user) {
     if (!user) return false;
+    if (currentRole === 'admin') return true;
     const email = (user.email || '').toLowerCase().trim();
     return ADMIN_EMAILS.indexOf(email) !== -1;
   }
 
-  function applyAccessState(user) {
-    if (loadingView) loadingView.style.display = 'none';
+  async function applyAccessState(user) {
     currentUser = user || null;
+    currentRole = user ? await fetchRole(user) : null;
+    if (loadingView) loadingView.style.display = 'none';
 
     if (!user) {
       accessGranted = false;
@@ -212,30 +234,10 @@
   // ============================================================
   // 2. 로그인 / 로그아웃
   // ============================================================
-  if (loginForm) {
-    loginForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      if (!sb()) { showMsg('서버 연결을 준비하지 못했습니다. 잠시 후 다시 시도해 주세요.', 'error'); return; }
-
-      const email = (el('admin-input-email').value || '').trim();
-      const pass = el('admin-input-pass').value;
-      const submitBtn = loginForm.querySelector('.admin-btn-submit');
-
-      submitBtn.disabled = true;
-      showMsg('관리자 계정 확인 중...', 'info');
-
-      try {
-        const { data, error } = await sb().auth.signInWithPassword({ email: email, password: pass });
-        if (error) throw error;
-        showMsg('로그인 성공! 권한을 확인합니다.', 'ok');
-        setTimeout(() => applyAccessState(data.user), 300);
-      } catch (err) {
-        showMsg(err.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요.', 'error');
-      } finally {
-        submitBtn.disabled = false;
-      }
-    });
-  }
+  // ---------- 이메일/비밀번호 로그인은 사용하지 않습니다 ----------
+  // 관리자도 Google 로그인만 사용합니다. (admin.html 에서도 폼을 제거했지만,
+  // 혹시 남아 있는 화면이 있어도 동작하지 않도록 여기서 한 번 더 숨깁니다)
+  if (loginForm) loginForm.style.display = 'none';
 
   if (googleBtn) {
     googleBtn.addEventListener('click', async function () {

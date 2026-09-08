@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/admin.css?v=20260908c">
+<link rel="stylesheet" href="css/admin.css?v=20260908d">
 </head>
 <body class="admin-body" data-service="work">
 
@@ -35,21 +35,11 @@
       Google 계정으로 관리자 로그인
     </button>
 
-    <div class="admin-divider"><span>또는 이메일 비밀번호</span></div>
 
-    <form id="admin-login-form">
-      <div class="admin-form-group">
-        <label>관리자 이메일</label>
-        <input type="email" id="admin-input-email" class="admin-input" required autocomplete="username" placeholder="관리자 이메일 입력">
-      </div>
-      <div class="admin-form-group">
-        <label>비밀번호</label>
-        <input type="password" id="admin-input-pass" class="admin-input" required placeholder="비밀번호 입력" autocomplete="current-password">
-      </div>
-      <button type="submit" class="admin-btn-submit"><i class="fa-solid fa-right-to-bracket"></i> 관리자 로그인</button>
-    </form>
+    <!-- 이메일/비밀번호 로그인 폼은 제거했습니다.
+         관리자도 위의 Google 로그인만 사용합니다. -->
 
-    <div id="admin-auth-msg" class="admin-msg" style="margin-top:16px;"></div>
+<div id="admin-auth-msg" class="admin-msg" style="margin-top:16px;"></div>
 
     <div style="margin-top:20px;">
       <a href="index.html" class="admin-btn-outline"><i class="fa-solid fa-arrow-left"></i> 서비스 홈으로 돌아가기</a>
@@ -443,8 +433,8 @@ select service, count(*) from public.page_views group by 1 order by 1;</pre>
 
 <!-- ================= 스크립트 ================= -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=20260908c"></script>
-<script src="js/supabase-admin-client.js?v=20260908c"></script>
+<script src="js/supabase-config.js?v=20260908d"></script>
+<script src="js/supabase-admin-client.js?v=20260908d"></script>
 <script>
   // 관리자 화면은 사용자용 script.js 를 로드하지 않습니다.
   window.ADMIN_CONFIG = {
@@ -492,6 +482,6 @@ select service, count(*) from public.page_views group by 1 order by 1;</pre>
     }
   };
 </script>
-<script src="js/admin.js?v=20260908c"></script>
+<script src="js/admin.js?v=20260908d"></script>
 </body>
 </html>

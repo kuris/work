@@ -200,3 +200,123 @@
 .cg-auth button.cg-auth-out { font-size: 12px; padding: 5px 11px; }
 .cg-auth img.cg-auth-avatar { width: 24px; height: 24px; border-radius: 50%; }
 .cg-auth .cg-auth-user { text-decoration: none; }
+
+/* ============================================================
+   「내 최근 이력」 위젯
+   - 서비스 본문 안에 들어가는 카드입니다.
+   - 서비스 배경 위에 자연스럽게 얹히도록 중립적인 색만 씁니다.
+   ============================================================ */
+.cg-recent {
+  border: 1px solid var(--cg-border, rgba(0, 0, 0, .1));
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--cg-card-bg, rgba(255, 255, 255, .72));
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cg-rec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.cg-rec-h {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--cg-fg, inherit);
+}
+.cg-rec-more {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cg-muted, #7b8189);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cg-rec-more:hover { text-decoration: underline; }
+
+.cg-rec-guest {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--cg-muted, #7b8189);
+}
+
+.cg-rec-loading,
+.cg-rec-empty {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--cg-muted, #7b8189);
+}
+
+/* 자주 쓰는 항목 - 칩 */
+.cg-rec-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.cg-rec-chip {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--cg-border, rgba(0, 0, 0, .1));
+  background: var(--cg-chip-bg, rgba(0, 0, 0, .03));
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cg-fg, inherit);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cg-rec-chip:hover { background: var(--cg-btn-bg-hover, rgba(0, 0, 0, .07)); }
+
+/* 최근 이력 - 목록 */
+.cg-rec-list { display: flex; flex-direction: column; }
+.cg-rec-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  border-top: 1px solid var(--cg-border, rgba(0, 0, 0, .07));
+  color: var(--cg-fg, inherit);
+  text-decoration: none;
+}
+.cg-rec-list .cg-rec-row:first-child { border-top: 0; }
+a.cg-rec-row:hover .cg-rec-title { text-decoration: underline; }
+
+.cg-rec-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 14px;
+}
+.cg-rec-sub {
+  flex: 0 1 auto;
+  font-size: 12px;
+  color: var(--cg-muted, #7b8189);
+  white-space: nowrap;
+}
+.cg-rec-when {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--cg-muted, #7b8189);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .cg-recent { padding: 14px; }
+  .cg-rec-sub { display: none; }
+}
+
+/* 서비스 CSS 간섭 차단 */
+.cg-recent a, .cg-recent button, .cg-recent span, .cg-recent p {
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  transform: none;
+}
+.cg-recent a:hover { transform: none; }

@@ -432,6 +432,131 @@
   }
 
   // ============================================================
+  // 최근 이력 / 자주 쓰는 항목  (8개 서비스 공통)
+  //   - 비로그인이면 전부 조용히 no-op 합니다. 기존 기능은 그대로 동작합니다.
+  //   - 기록은 public.cg_recent 에 (service, kind, item_id) 단위로 쌓입니다.
+  // ============================================================
+
+  // "이 항목을 봤다/썼다" 를 기록합니다. 이미 있으면 횟수만 늘어납니다.
+  //   CGAuth.touchRecent({ kind:'item', id:'學', title:'배울 학', url:'learn.html?c=學' })
+  var touchQueue = {};
+  async function touchRecent(o) {
+    if (!user || !client || !o || !o.id) return false;
+    var db = pub();
+    if (!db) return false;
+
+    // 같은 항목을 짧은 시간에 여러 번 기록하지 않도록 걸러 냅니다
+    var key = (o.kind || 'item') + '::' + o.id;
+    var now = Date.now();
+    if (touchQueue[key] && now - touchQueue[key] < 10000) return false;
+    touchQueue[key] = now;
+
+    try {
+      var r = await db.rpc('cg_touch_recent', {
+        p_service: opts.service,
+        p_kind:    o.kind || 'item',
+        p_item_id: String(o.id),
+        p_title:   o.title != null ? String(o.title) : null,
+        p_url:     o.url   != null ? String(o.url)   : null,
+        p_meta:    o.meta  != null ? o.meta          : null
+      });
+      if (r.error) throw r.error;
+      return true;
+    } catch (e) {
+      warn('최근 이력 기록 실패', e);
+      return false;
+    }
+  }
+
+  // 최근 본 항목 (기본 10개)
+  async function listRecent(o) {
+    return queryRecent(o, 'updated_at');
+  }
+
+  // 자주 쓰는 항목 (횟수 순)
+  async function listFrequent(o) {
+    return queryRecent(o, 'hit_count');
+  }
+
+  async function queryRecent(o, orderCol) {
+    if (!user || !client) return [];
+    var db = pub();
+    if (!db) return [];
+    o = o || {};
+    try {
+      var q = db.from('cg_recent').select('*')
+        .eq('user_id', user.id)
+        .eq('service', o.service || opts.service);
+      if (o.kind) q = q.eq('kind', o.kind);
+      if (o.pinnedOnly) q = q.eq('pinned', true);
+      q = q.order(orderCol, { ascending: false }).limit(o.limit || 10);
+      var r = await q;
+      if (r.error) throw r.error;
+      return r.data || [];
+    } catch (e) {
+      warn('최근 이력 조회 실패', e);
+      return [];
+    }
+  }
+
+  // 자주 쓰는 메뉴 고정/해제
+  async function pinRecent(kind, itemId, pinned) {
+    if (!user || !client) return false;
+    var db = pub();
+    if (!db) return false;
+    try {
+      var r = await db.from('cg_recent')
+        .update({ pinned: !!pinned })
+        .eq('user_id', user.id).eq('service', opts.service)
+        .eq('kind', kind || 'item').eq('item_id', String(itemId));
+      if (r.error) throw r.error;
+      return true;
+    } catch (e) {
+      warn('고정 처리 실패', e);
+      return false;
+    }
+  }
+
+  async function removeRecent(kind, itemId) {
+    if (!user || !client) return false;
+    var db = pub();
+    if (!db) return false;
+    try {
+      var r = await db.from('cg_recent').delete()
+        .eq('user_id', user.id).eq('service', opts.service)
+        .eq('kind', kind || 'item').eq('item_id', String(itemId));
+      if (r.error) throw r.error;
+      return true;
+    } catch (e) {
+      warn('이력 삭제 실패', e);
+      return false;
+    }
+  }
+
+  // 서비스별 임의 테이블에서 "최근 N개" 를 읽는 범용 헬퍼
+  //   (hanja.learn_progress 처럼 스키마가 다른 표도 읽을 수 있게 schema 지정 가능)
+  async function listHistory(table, o) {
+    if (!user || !client) return [];
+    o = o || {};
+    try {
+      var base = client;
+      if (o.schema && typeof client.schema === 'function') base = client.schema(o.schema);
+      else base = pub();
+      var q = base.from(table).select(o.select || '*').eq('user_id', user.id);
+      if (o.match) {
+        for (var k in o.match) { if (Object.prototype.hasOwnProperty.call(o.match, k)) q = q.eq(k, o.match[k]); }
+      }
+      q = q.order(o.orderBy || 'created_at', { ascending: false }).limit(o.limit || 10);
+      var r = await q;
+      if (r.error) throw r.error;
+      return r.data || [];
+    } catch (e) {
+      warn('이력 조회 실패 (' + table + ')', e);
+      return [];
+    }
+  }
+
+  // ============================================================
   // 로그인 UI
   // ============================================================
   var G_SVG =
@@ -589,6 +714,112 @@
   }
 
   // ============================================================
+  // 「내 최근 이력」 위젯
+  //   각 서비스가 한 줄로 꽂아 쓰는 공용 패널입니다.
+  //     CGAuth.mountRecentPanel('#my-recent', { title:'최근 학습', loader: fn })
+  //   - 비로그인: 로그인하면 뭐가 좋은지 안내 + Google 버튼 (기능 차단 아님)
+  //   - 로그인:   자주 쓰는 항목 + 최근 이력 목록
+  // ============================================================
+  var panels = [];
+
+  function timeAgo(iso) {
+    if (!iso) return '';
+    var t = new Date(iso).getTime();
+    if (!t) return '';
+    var d = Math.floor((Date.now() - t) / 1000);
+    if (d < 60) return '방금';
+    if (d < 3600) return Math.floor(d / 60) + '분 전';
+    if (d < 86400) return Math.floor(d / 3600) + '시간 전';
+    if (d < 604800) return Math.floor(d / 86400) + '일 전';
+    var dt = new Date(t);
+    return (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일';
+  }
+
+  function rowHtml(r) {
+    var title = esc(r.title || r.item_id || '');
+    var when = timeAgo(r.updated_at || r.created_at || r.learned_at || r.answered_at || r.completed_at);
+    var sub = r.subtitle ? '<span class="cg-rec-sub">' + esc(r.subtitle) + '</span>' : '';
+    var inner =
+      '<span class="cg-rec-title">' + title + '</span>' + sub +
+      '<span class="cg-rec-when">' + esc(when) + '</span>';
+    return r.url
+      ? '<a class="cg-rec-row" href="' + esc(r.url) + '">' + inner + '</a>'
+      : '<div class="cg-rec-row">' + inner + '</div>';
+  }
+
+  async function paintPanel(panel) {
+    var box = panel.el;
+    if (!box || !box.isConnected) return;
+    var cfg = panel.cfg;
+
+    if (!user) {
+      box.className = 'cg-recent cg-recent--out';
+      box.innerHTML =
+        '<div class="cg-rec-head"><span class="cg-rec-h">' + esc(cfg.title || '내 기록') + '</span></div>' +
+        '<p class="cg-rec-guest">' + esc(cfg.guestText || '로그인하면 기록이 계정에 저장돼 다른 기기에서도 이어서 볼 수 있어요.') + '</p>' +
+        '<button type="button" class="cg-auth-google" data-cg="login">' + G_SVG + '<span>Google로 로그인</span></button>';
+      return;
+    }
+
+    box.className = 'cg-recent cg-recent--in';
+    box.innerHTML =
+      '<div class="cg-rec-head"><span class="cg-rec-h">' + esc(cfg.title || '내 기록') + '</span>' +
+      (cfg.moreUrl ? '<a class="cg-rec-more" href="' + esc(cfg.moreUrl) + '">전체 보기</a>' : '') +
+      '</div><div class="cg-rec-body"><div class="cg-rec-loading">불러오는 중…</div></div>';
+
+    var body = box.querySelector('.cg-rec-body');
+    var rows = [], pinned = [];
+    try {
+      rows = cfg.loader ? await cfg.loader() : await listRecent({ kind: cfg.kind, limit: cfg.limit || 8 });
+      if (cfg.showFrequent && !cfg.loader) {
+        pinned = await listFrequent({ kind: cfg.kind, limit: 5 });
+      }
+    } catch (e) {
+      warn('최근 이력 패널 로드 실패', e);
+    }
+    if (!body.isConnected) return;
+
+    if ((!rows || !rows.length) && (!pinned || !pinned.length)) {
+      body.innerHTML = '<p class="cg-rec-empty">' + esc(cfg.emptyText || '아직 기록이 없어요. 사용을 시작하면 여기에 쌓입니다.') + '</p>';
+      return;
+    }
+
+    var html = '';
+    if (pinned && pinned.length > 1) {
+      html += '<div class="cg-rec-chips">' +
+        pinned.map(function (r) {
+          return r.url
+            ? '<a class="cg-rec-chip" href="' + esc(r.url) + '">' + esc(r.title || r.item_id) + '</a>'
+            : '<span class="cg-rec-chip">' + esc(r.title || r.item_id) + '</span>';
+        }).join('') + '</div>';
+    }
+    html += '<div class="cg-rec-list">' + (rows || []).map(rowHtml).join('') + '</div>';
+    body.innerHTML = html;
+  }
+
+  function mountRecentPanel(target, cfg) {
+    var host = resolveMountTarget(target);
+    if (!host) return null;
+    var box = host.classList && host.classList.contains('cg-recent')
+      ? host
+      : host.querySelector(':scope > .cg-recent');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'cg-recent';
+      host.appendChild(box);
+    }
+    var panel = { el: box, cfg: cfg || {} };
+    panels.push(panel);
+    bindDelegates();
+    paintPanel(panel);
+    return box;
+  }
+
+  function refreshPanels() {
+    for (var i = 0; i < panels.length; i++) paintPanel(panels[i]);
+  }
+
+  // ============================================================
   // 상태 변경 통지
   // ============================================================
   function setUser(u) {
@@ -596,6 +827,7 @@
     user = u || null;
     if (!user || user.id !== prev) { profile = null; entitlements = null; }
     paint();
+    refreshPanels();
     emit();
   }
 
@@ -687,6 +919,7 @@
     } else {
       cacheAdFree();
     }
+    refreshPanels();
     emit();
     readyResolve(true);
 
@@ -707,6 +940,7 @@
           cacheAdFree();
         }
         paint();
+        refreshPanels();
         emit();
       });
     } catch (e) {
@@ -823,6 +1057,17 @@
     upsertRecord: upsertRecord,
     listRecords: listRecords,
     deleteRecord: deleteRecord,
+
+    // 최근 이력 / 자주 쓰는 항목
+    touchRecent: touchRecent,
+    listRecent: listRecent,
+    listFrequent: listFrequent,
+    pinRecent: pinRecent,
+    removeRecent: removeRecent,
+    listHistory: listHistory,
+    mountRecentPanel: mountRecentPanel,
+    refreshPanels: refreshPanels,
+    timeAgo: timeAgo,
 
     // UI
     mountAuthUI: mountAuthUI,

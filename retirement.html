@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퇴직금 계산기 - 직장인 업무도구</title>
+  <meta name="description" content="입사일, 퇴사일, 최근 임금을 기준으로 예상 퇴직금을 간단히 계산해보세요.">
+  <meta name="keywords" content="퇴직금 계산기, 예상 퇴직금, 평균임금 계산, 근속일수 계산, 퇴직금 세금">
+  <link rel="canonical" href="https://work.chatgpts.kr/retirement">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="퇴직금 계산기 - 직장인 업무도구">
+  <meta property="og:description" content="입사일, 퇴사일, 최근 임금을 기준으로 예상 퇴직금을 간단히 계산해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/retirement">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8F%A6%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip active">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 계산기 폼 & 결과 컨테이너 -->
+    <div class="calc-container">
+      
+      <!-- 입력 폼 -->
+      <section class="calc-box" aria-label="퇴직금 정보 입력">
+        <h1 class="calc-box-title"><i class="fa-solid fa-vault" style="color:var(--color-primary);"></i> 재직 기간 및 임금 정보</h1>
+
+        <form id="retirement-form">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label for="input-start-date" class="form-label">입사일자</label>
+              <input type="date" id="input-start-date" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="input-end-date" class="form-label">퇴사일자</label>
+              <input type="date" id="input-end-date" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-3months-wage" class="form-label">퇴직 전 3개월간 기본급 합계</label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-3months-wage" class="form-input" value="9,000,000" inputmode="numeric" required>
+              <span class="input-unit">원</span>
+            </div>
+            <small style="color:var(--color-text-muted); display:block; margin-top:4px;">* 월 300만원 기준 3개월 합계 900만원</small>
+          </div>
+
+          <div class="form-group">
+            <label for="input-annual-bonus" class="form-label">연간 상여금 총액 <small>(해당자만)</small></label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-annual-bonus" class="form-input" value="0" inputmode="numeric">
+              <span class="input-unit">원</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-annual-leave-allowance" class="form-label">연차유급휴가 미사용 수당 등 <small>(해당자만)</small></label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-annual-leave-allowance" class="form-input" value="0" inputmode="numeric">
+              <span class="input-unit">원</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 예상 퇴직금 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset">기본값</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 계산 결과 -->
+      <section class="result-card" aria-label="퇴직금 계산 결과">
+        <div class="result-hero-box">
+          <div class="result-hero-label">예상 법정 퇴직금 (세전)</div>
+          <div class="result-hero-amount" id="res-retirement-pay">8,876,712원</div>
+          <div class="result-hero-sub" id="res-eligibility-text" style="color:var(--color-success); font-weight:700;">✓ 법정 퇴직금 지급 대상 (1년 이상 근무)</div>
+        </div>
+
+        <table class="result-table">
+          <tbody>
+            <tr>
+              <th>총 재직일수 (근속일수)</th>
+              <td id="res-work-days">1,095일 (약 3년 0개월)</td>
+            </tr>
+            <tr>
+              <th>퇴직 전 3개월 임금 합계</th>
+              <td id="res-3months-sum">9,000,000원</td>
+            </tr>
+            <tr>
+              <th>상여금·수당 반영분 (3/12)</th>
+              <td id="res-bonus-part">0원</td>
+            </tr>
+            <tr>
+              <th>1일 평균임금 (기준: 91일)</th>
+              <td id="res-daily-avg">98,901원</td>
+            </tr>
+            <tr class="total-row">
+              <th>예상 퇴직금 산출액</th>
+              <td id="res-total-pay" style="color:var(--color-primary-dark);">8,876,712원</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background:#F1F5F9; border-radius:8px; padding:10px 14px; font-size:0.84rem; color:var(--color-text-soft);">
+          <strong>계산 공식:</strong> 1일 평균임금 × 30일 × (총 재직일수 ÷ 365일)
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 퇴직금 계산 시 유의사항</strong>
+      근로기준법상 퇴직금은 4주간을 평균하여 1주간 소정근로시간이 15시간 이상이고, 계속근로기간이 1년 이상인 근로자에게 적용됩니다.
+      실제 지급액은 퇴사 전 3개월간의 정확한 역일수(89~92일), 정기상여금 규정, 통상임금 기준 미달 여부, 퇴직소득세 원천징수액에 따라 차이가 있을 수 있습니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/calculators.js"></script>
+  <script>
+    function setDefaultDates() {
+      var today = new Date();
+      var endStr = today.toISOString().slice(0, 10);
+      
+      // 3년 전 날짜 기본값
+      var start = new Date(today);
+      start.setFullYear(start.getFullYear() - 3);
+      var startStr = start.toISOString().slice(0, 10);
+
+      document.getElementById('input-start-date').value = startStr;
+      document.getElementById('input-end-date').value = endStr;
+    }
+
+    function runRetirementCalculation() {
+      var startStr = document.getElementById('input-start-date').value;
+      var endStr = document.getElementById('input-end-date').value;
+      var threeMonths = window.WorkUtils.parseNumber(document.getElementById('input-3months-wage').value);
+      var bonus = window.WorkUtils.parseNumber(document.getElementById('input-annual-bonus').value);
+      var allowance = window.WorkUtils.parseNumber(document.getElementById('input-annual-leave-allowance').value);
+
+      var res = window.WorkCalculators.calculateRetirementPay(startStr, endStr, threeMonths, bonus + allowance);
+      if (!res || res.error) {
+        alert(res ? res.error : '날짜를 올바르게 입력해 주세요.');
+        return;
+      }
+
+      document.getElementById('res-retirement-pay').textContent = window.WorkUtils.formatNumber(res.estimatedPay) + '원';
+      document.getElementById('res-total-pay').textContent = window.WorkUtils.formatNumber(res.estimatedPay) + '원';
+      
+      var years = (res.totalWorkDays / 365).toFixed(1);
+      document.getElementById('res-work-days').textContent = res.totalWorkDays.toLocaleString() + '일 (약 ' + years + '년)';
+      document.getElementById('res-3months-sum').textContent = window.WorkUtils.formatNumber(threeMonths) + '원';
+      document.getElementById('res-bonus-part').textContent = window.WorkUtils.formatNumber(Math.round((bonus + allowance) * 0.25)) + '원';
+      document.getElementById('res-daily-avg').textContent = window.WorkUtils.formatNumber(res.dailyAverageWage) + '원';
+
+      var elEligibility = document.getElementById('res-eligibility-text');
+      if (res.isEligible) {
+        elEligibility.textContent = '✓ 법정 퇴직금 지급 대상 (1년 이상 근무)';
+        elEligibility.style.color = 'var(--color-success)';
+      } else {
+        elEligibility.textContent = '⚠️ 계속근로기간 1년 미만으로 법정 퇴직금 미발생 대상입니다.';
+        elEligibility.style.color = 'var(--color-danger)';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setDefaultDates();
+
+      var input3M = document.getElementById('input-3months-wage');
+      var inputBonus = document.getElementById('input-annual-bonus');
+      var inputAllow = document.getElementById('input-annual-leave-allowance');
+      var form = document.getElementById('retirement-form');
+      var btnReset = document.getElementById('btn-reset');
+
+      input3M.addEventListener('input', function () { input3M.value = window.WorkUtils.formatNumber(window.WorkUtils.parseNumber(input3M.value)); });
+      inputBonus.addEventListener('input', function () { inputBonus.value = window.WorkUtils.formatNumber(window.WorkUtils.parseNumber(inputBonus.value)); });
+      inputAllow.addEventListener('input', function () { inputAllow.value = window.WorkUtils.formatNumber(window.WorkUtils.parseNumber(inputAllow.value)); });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runRetirementCalculation();
+      });
+
+      btnReset.addEventListener('click', function () {
+        setDefaultDates();
+        input3M.value = '9,000,000';
+        inputBonus.value = '0';
+        inputAllow.value = '0';
+        runRetirementCalculation();
+      });
+
+      runRetirementCalculation();
+    });
+  </script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

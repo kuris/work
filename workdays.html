@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>근무일수 계산기 - 직장인 업무도구</title>
+  <meta name="description" content="시작일과 종료일을 기준으로 총 일수와 근무일수를 간단히 계산해보세요.">
+  <meta name="keywords" content="근무일수 계산기, 영업일 계산, 평일 일수 계산, 프로젝트 일정 계산, D-day">
+  <link rel="canonical" href="https://work.chatgpts.kr/workdays">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="근무일수 계산기 - 직장인 업무도구">
+  <meta property="og:description" content="시작일과 종료일을 기준으로 총 일수와 근무일수를 간단히 계산해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/workdays">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%93%85%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip active">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 계산기 폼 & 결과 컨테이너 -->
+    <div class="calc-container">
+      
+      <!-- 입력 폼 -->
+      <section class="calc-box" aria-label="근무일수 정보 입력">
+        <h1 class="calc-box-title"><i class="fa-solid fa-calendar-days" style="color:var(--color-primary);"></i> 기간 및 제외 옵션</h1>
+
+        <form id="workdays-form">
+          <div class="form-group">
+            <label for="input-start-date" class="form-label">시작일자</label>
+            <input type="date" id="input-start-date" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="input-end-date" class="form-label">종료일자</label>
+            <input type="date" id="input-end-date" class="form-input" required>
+          </div>
+
+          <!-- 빠른 기간 버튼 -->
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;">
+            <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setPeriodPreset(7)">1주일</button>
+            <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setPeriodPreset(14)">2주일</button>
+            <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setPeriodPreset(30)">1개월</button>
+            <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setPeriodPreset(90)">3개월</button>
+            <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setPeriodPreset(180)">6개월</button>
+          </div>
+
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; margin-bottom:8px;">
+              <input type="checkbox" id="check-exclude-weekends" checked style="width:18px; height:18px; accent-color:var(--color-primary);">
+              <span>주말(토·일요일) 제외</span>
+            </label>
+
+            <label style="display:flex; align-items:center; gap:8px; color:var(--color-text-muted);">
+              <input type="checkbox" disabled style="width:18px; height:18px;">
+              <span>법정 공휴일 제외 <small style="background:#F1F5F9; color:#475569; padding:2px 6px; border-radius:4px; font-weight:700;">추후 지원 예정</small></span>
+            </label>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 근무일수 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset">오늘 기준</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 계산 결과 -->
+      <section class="result-card" aria-label="계산 결과">
+        <div class="result-hero-box">
+          <div class="result-hero-label">실제 평일 근무일수</div>
+          <div class="result-hero-amount" id="res-workdays-amount" style="color:var(--color-primary);">22일</div>
+          <div class="result-hero-sub" id="res-period-range">총 기간: 30일 중</div>
+        </div>
+
+        <table class="result-table">
+          <tbody>
+            <tr>
+              <th>총 역일수 (전체 기간)</th>
+              <td id="res-total-days">30일</td>
+            </tr>
+            <tr>
+              <th>평일 (월~금 근무일)</th>
+              <td id="res-weekdays" style="color:var(--color-primary);">22일</td>
+            </tr>
+            <tr>
+              <th>주말 (토·일요일)</th>
+              <td id="res-weekends" style="color:var(--color-text-muted);">8일</td>
+            </tr>
+            <tr class="total-row">
+              <th>근무 비율</th>
+              <td id="res-work-ratio" style="color:var(--color-primary-dark);">약 73.3%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background:#F8FAFC; border:1px solid var(--color-border); border-radius:8px; padding:12px; font-size:0.86rem; color:var(--color-text-soft);">
+          📅 <strong>시작 요일:</strong> <span id="res-start-day-name">월요일</span> / 
+          <strong>종료 요일:</strong> <span id="res-end-day-name">화요일</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 근무일수 계산 안내</strong>
+      본 계산기는 입력하신 기간의 순수 평일(월요일~금요일)을 기준으로 산출합니다.
+      신정, 설날, 추석, 대체공휴일 등 법정 공휴일 및 회사의 사내 창립기념일 등의 휴무일은 회사별 취업규칙에 따라 상이하므로 실무 일정 수립 시 참고하시기 바랍니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/calculators.js"></script>
+  <script>
+    var DAY_NAMES = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    function setDefaultDates() {
+      var today = new Date();
+      var startStr = today.toISOString().slice(0, 10);
+      
+      var end = new Date(today);
+      end.setDate(end.getDate() + 30);
+      var endStr = end.toISOString().slice(0, 10);
+
+      document.getElementById('input-start-date').value = startStr;
+      document.getElementById('input-end-date').value = endStr;
+    }
+
+    function setPeriodPreset(days) {
+      var startStr = document.getElementById('input-start-date').value;
+      var start = startStr ? new Date(startStr) : new Date();
+      var end = new Date(start);
+      end.setDate(end.getDate() + days - 1);
+      document.getElementById('input-end-date').value = end.toISOString().slice(0, 10);
+      runWorkdaysCalculation();
+    }
+
+    function runWorkdaysCalculation() {
+      var startStr = document.getElementById('input-start-date').value;
+      var endStr = document.getElementById('input-end-date').value;
+      var excludeWeekends = document.getElementById('check-exclude-weekends').checked;
+
+      var res = window.WorkCalculators.calculateWorkdays(startStr, endStr);
+      if (!res || res.error) {
+        alert(res ? res.error : '날짜를 올바르게 입력해 주세요.');
+        return;
+      }
+
+      var resultWorkdays = excludeWeekends ? res.weekdays : res.totalDays;
+
+      document.getElementById('res-workdays-amount').textContent = resultWorkdays.toLocaleString() + '일';
+      document.getElementById('res-period-range').textContent = '총 기간: ' + res.totalDays.toLocaleString() + '일 중';
+      document.getElementById('res-total-days').textContent = res.totalDays.toLocaleString() + '일';
+      document.getElementById('res-weekdays').textContent = res.weekdays.toLocaleString() + '일';
+      document.getElementById('res-weekends').textContent = res.weekends.toLocaleString() + '일';
+
+      var ratio = res.totalDays > 0 ? ((resultWorkdays / res.totalDays) * 100).toFixed(1) : 0;
+      document.getElementById('res-work-ratio').textContent = '약 ' + ratio + '%';
+
+      var sDate = new Date(startStr);
+      var eDate = new Date(endStr);
+      document.getElementById('res-start-day-name').textContent = DAY_NAMES[sDate.getDay()];
+      document.getElementById('res-end-day-name').textContent = DAY_NAMES[eDate.getDay()];
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setDefaultDates();
+
+      var form = document.getElementById('workdays-form');
+      var btnReset = document.getElementById('btn-reset');
+      var chkWeekends = document.getElementById('check-exclude-weekends');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runWorkdaysCalculation();
+      });
+
+      chkWeekends.addEventListener('change', runWorkdaysCalculation);
+
+      btnReset.addEventListener('click', function () {
+        setDefaultDates();
+        chkWeekends.checked = true;
+        runWorkdaysCalculation();
+      });
+
+      runWorkdaysCalculation();
+    });
+  </script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

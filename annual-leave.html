@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>연차 계산기 - 직장인 업무도구</title>
+  <meta name="description" content="입사일과 기준일을 기준으로 예상 연차와 남은 연차를 계산해보세요.">
+  <meta name="keywords" content="연차 계산기, 남은 연차 계산, 근속 연차, 1년 미만 연차, 근로기준법 60조">
+  <link rel="canonical" href="https://work.chatgpts.kr/annual-leave">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="연차 계산기 - 직장인 업무도구">
+  <meta property="og:description" content="입사일과 기준일을 기준으로 예상 연차와 남은 연차를 계산해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/annual-leave">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8F%96%EF%B8%8F%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip active">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 계산기 폼 & 결과 컨테이너 -->
+    <div class="calc-container">
+      
+      <!-- 입력 폼 -->
+      <section class="calc-box" aria-label="입사 정보 입력">
+        <h1 class="calc-box-title"><i class="fa-solid fa-umbrella-beach" style="color:var(--color-primary);"></i> 입사일 및 연차 정보</h1>
+
+        <form id="leave-form">
+          <div class="form-group">
+            <label for="input-join-date" class="form-label">입사일자</label>
+            <input type="date" id="input-join-date" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="input-base-date" class="form-label">계산 기준일자 <small>(기본값: 오늘)</small></label>
+            <input type="date" id="input-base-date" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="input-used-leave" class="form-label">이미 사용한 연차 일수</label>
+            <div class="form-input-wrap">
+              <input type="number" id="input-used-leave" class="form-input" value="0" min="0" max="100" step="0.5" required>
+              <span class="input-unit">일</span>
+            </div>
+            <small style="color:var(--color-text-muted); display:block; margin-top:4px;">* 반차(0.5일) 사용 시 소수점으로 입력 가능</small>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 잔여 연차 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset">오늘 기준</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 계산 결과 -->
+      <section class="result-card" aria-label="연차 계산 결과">
+        <div class="result-hero-box">
+          <div class="result-hero-label">현재 잔여 연차 일수</div>
+          <div class="result-hero-amount" id="res-remaining-leave" style="color:#D97706;">15.0일</div>
+          <div class="result-hero-sub" id="res-leave-type-desc">입사 1년 이상 정기 연차 (기본 15일)</div>
+        </div>
+
+        <table class="result-table">
+          <tbody>
+            <tr>
+              <th>총 근속 기간</th>
+              <td id="res-service-period">1년 6개월 (총 548일)</td>
+            </tr>
+            <tr>
+              <th>발생한 총 연차 일수</th>
+              <td id="res-total-granted" style="color:var(--color-primary);">15.0일</td>
+            </tr>
+            <tr>
+              <th>사용한 연차 일수</th>
+              <td id="res-used-leave" style="color:#DC2626;">0.0일</td>
+            </tr>
+            <tr class="total-row">
+              <th>사용 가능한 남은 연차</th>
+              <td id="res-final-remaining" style="color:#D97706;">15.0일</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 연차 산정 기준 안내 -->
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:12px 14px; font-size:0.84rem; color:#78350F;">
+          <strong>근로기준법 제60조 핵심 요약:</strong>
+          <ul style="margin:4px 0 0 16px; padding:0; line-height:1.5;">
+            <li><strong>1년 미만:</strong> 1개월 개근 시 1일씩 발생 (최대 11일)</li>
+            <li><strong>1년 이상:</strong> 80% 이상 출근 시 15일 부여</li>
+            <li><strong>3년 이상:</strong> 2년마다 1일씩 가산 (최대 25일 한도)</li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 연차 계산 안내 및 주의사항</strong>
+      본 계산기는 근로기준법상 <strong>'입사일 기준'</strong>으로 계산됩니다.
+      실제 기업 현장에서는 관리 편의를 위해 매년 1월 1일 일괄 연차를 부여하는 <strong>'회계연도 기준'</strong>을 적용하는 경우가 많으며, 이 경우 중도입사자의 첫해 부여 일수는 비례 계산됩니다.
+      정확한 잔여 휴가 일수는 사내 인트라넷 또는 인사팀을 통해 확인하시기 바랍니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/calculators.js"></script>
+  <script>
+    function setDefaultDates() {
+      var today = new Date();
+      var baseStr = today.toISOString().slice(0, 10);
+      
+      // 1년 6개월 전 입사일 기본값
+      var join = new Date(today);
+      join.setMonth(join.getMonth() - 18);
+      var joinStr = join.toISOString().slice(0, 10);
+
+      document.getElementById('input-join-date').value = joinStr;
+      document.getElementById('input-base-date').value = baseStr;
+    }
+
+    function runLeaveCalculation() {
+      var joinStr = document.getElementById('input-join-date').value;
+      var baseStr = document.getElementById('input-base-date').value;
+      var used = parseFloat(document.getElementById('input-used-leave').value) || 0;
+
+      var res = window.WorkCalculators.calculateAnnualLeave(joinStr, baseStr, used);
+      if (!res || res.error) {
+        alert(res ? res.error : '날짜를 올바르게 입력해 주세요.');
+        return;
+      }
+
+      document.getElementById('res-remaining-leave').textContent = res.remainingLeave.toFixed(1) + '일';
+      document.getElementById('res-final-remaining').textContent = res.remainingLeave.toFixed(1) + '일';
+      document.getElementById('res-leave-type-desc').textContent = res.leaveTypeDesc;
+      
+      var periodText = res.serviceYears + '년 ' + res.serviceMonths + '개월 (총 ' + res.totalDays.toLocaleString() + '일)';
+      document.getElementById('res-service-period').textContent = periodText;
+      document.getElementById('res-total-granted').textContent = res.totalGrantedLeave.toFixed(1) + '일';
+      document.getElementById('res-used-leave').textContent = res.usedLeave.toFixed(1) + '일';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setDefaultDates();
+
+      var form = document.getElementById('leave-form');
+      var btnReset = document.getElementById('btn-reset');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runLeaveCalculation();
+      });
+
+      btnReset.addEventListener('click', function () {
+        setDefaultDates();
+        document.getElementById('input-used-leave').value = '0';
+        runLeaveCalculation();
+      });
+
+      runLeaveCalculation();
+    });
+  </script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

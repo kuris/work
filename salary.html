@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>연봉 실수령액 계산기 - 직장인 업무도구</title>
+  <meta name="description" content="연봉과 월급을 입력하면 예상 세금과 4대보험 공제액을 반영한 월 실수령액을 계산할 수 있습니다.">
+  <meta name="keywords" content="연봉 실수령액 계산기, 월급 실수령액, 4대보험 계산기, 국민연금, 건강보험, 근로소득세">
+  <link rel="canonical" href="https://work.chatgpts.kr/salary">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="연봉 실수령액 계산기 - 직장인 업무도구">
+  <meta property="og:description" content="연봉과 월급을 입력하면 예상 세금과 4대보험 공제액을 반영한 월 실수령액을 계산할 수 있습니다.">
+  <meta property="og:url" content="https://work.chatgpts.kr/salary">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%92%B0%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip active">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 계산기 폼 & 결과 컨테이너 -->
+    <div class="calc-container">
+      
+      <!-- 입력 폼 -->
+      <section class="calc-box" aria-label="급여 정보 입력">
+        <h1 class="calc-box-title"><i class="fa-solid fa-coins" style="color:var(--color-primary);"></i> 연봉 및 급여 정보 입력</h1>
+
+        <!-- 연봉 / 월급 선택 탭 -->
+        <div class="toggle-tabs">
+          <button type="button" class="toggle-tab-btn active" id="tab-annual">연봉 기준 입력</button>
+          <button type="button" class="toggle-tab-btn" id="tab-monthly">월급 기준 입력</button>
+        </div>
+
+        <form id="salary-form">
+          <div class="form-group">
+            <label for="input-amount" class="form-label" id="label-amount">계약 연봉 금액</label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-amount" class="form-input" placeholder="예: 40,000,000" value="40,000,000" inputmode="numeric" required>
+              <span class="input-unit">원</span>
+            </div>
+            <!-- 간편 금액 프리셋 버튼 -->
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(30000000)">3천만</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(40000000)">4천만</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(50000000)">5천만</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(60000000)">6천만</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(80000000)">8천만</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setSalaryPreset(100000000)">1억</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-non-taxable" class="form-label">월 비과세액 <small>(식대 등, 기본 20만원)</small></label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-non-taxable" class="form-input" value="200,000" inputmode="numeric">
+              <span class="input-unit">원</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label for="input-dependents" class="form-label">부양가족 수 <small>(본인 포함)</small></label>
+              <div class="form-input-wrap">
+                <input type="number" id="input-dependents" class="form-input" value="1" min="1" max="15">
+                <span class="input-unit">명</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="input-children" class="form-label">20세 이하 자녀 수</label>
+              <div class="form-input-wrap">
+                <input type="number" id="input-children" class="form-input" value="0" min="0" max="10">
+                <span class="input-unit">명</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 실수령액 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset">초기화</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 계산 결과 -->
+      <section class="result-card" aria-label="계산 결과">
+        <div class="result-hero-box">
+          <div class="result-hero-label">예상 월 실수령액</div>
+          <div class="result-hero-amount" id="res-monthly-net">2,873,420원</div>
+          <div class="result-hero-sub" id="res-annual-net">연간 예상 환산: 34,481,040원</div>
+        </div>
+
+        <table class="result-table">
+          <tbody>
+            <tr>
+              <th>월 지급액 (세전)</th>
+              <td id="res-monthly-gross">3,333,333원</td>
+            </tr>
+            <tr>
+              <th>국민연금 (4.5%)</th>
+              <td id="res-pension" style="color:#DC2626;">-141,000원</td>
+            </tr>
+            <tr>
+              <th>건강보험 (3.545%)</th>
+              <td id="res-health" style="color:#DC2626;">-111,070원</td>
+            </tr>
+            <tr>
+              <th>장기요양보험 (건보의 12.95%)</th>
+              <td id="res-care" style="color:#DC2626;">-14,380원</td>
+            </tr>
+            <tr>
+              <th>고용보험 (0.9%)</th>
+              <td id="res-employment" style="color:#DC2626;">-28,200원</td>
+            </tr>
+            <tr>
+              <th>소득세 (간이세액 추정)</th>
+              <td id="res-income-tax" style="color:#DC2626;">-150,240원</td>
+            </tr>
+            <tr>
+              <th>지방소득세 (소득세의 10%)</th>
+              <td id="res-local-tax" style="color:#DC2626;">-15,020원</td>
+            </tr>
+            <tr class="total-row">
+              <th>월 총 공제액 합계</th>
+              <td id="res-total-deductions" style="color:#DC2626;">-459,910원</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p style="font-size:0.82rem; color:var(--color-text-muted); text-align:right;">
+          * 공제 비율: 월 지급액 대비 약 <strong id="res-deduction-rate" style="color:var(--color-primary);">13.8%</strong>
+        </p>
+      </section>
+
+    </div>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 참고용 간이 추정치 안내</strong>
+      본 계산 결과는 2026년 기준 4대보험요율 및 근로소득 간이세액표를 기준으로 산출한 참고용 추정치입니다.
+      실제 급여명세서의 공제 금액은 비과세 항목(자가운전보조금, 연구수당 등), 학자금 대출 상환, 회사 복지 공제 및 연말정산 공제 요건에 따라 달라질 수 있습니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/calculators.js"></script>
+  <script>
+    var isMonthlyMode = false;
+
+    function formatInputCurrency(inputEl) {
+      var val = window.WorkUtils.parseNumber(inputEl.value);
+      inputEl.value = window.WorkUtils.formatNumber(val);
+    }
+
+    function setSalaryPreset(amount) {
+      var inputEl = document.getElementById('input-amount');
+      if (isMonthlyMode) amount = Math.round(amount / 12);
+      inputEl.value = window.WorkUtils.formatNumber(amount);
+      runSalaryCalculation();
+    }
+
+    function runSalaryCalculation() {
+      var gross = window.WorkUtils.parseNumber(document.getElementById('input-amount').value);
+      var nonTaxable = window.WorkUtils.parseNumber(document.getElementById('input-non-taxable').value);
+      var dependents = parseInt(document.getElementById('input-dependents').value, 10) || 1;
+      var children = parseInt(document.getElementById('input-children').value, 10) || 0;
+
+      var res = window.WorkCalculators.calculateSalary(gross, isMonthlyMode, dependents, children, nonTaxable);
+
+      document.getElementById('res-monthly-net').textContent = window.WorkUtils.formatNumber(res.monthlyNet) + '원';
+      document.getElementById('res-annual-net').textContent = '연간 예상 환산: ' + window.WorkUtils.formatNumber(res.annualNet) + '원';
+      document.getElementById('res-monthly-gross').textContent = window.WorkUtils.formatNumber(res.monthlyGross) + '원';
+      
+      document.getElementById('res-pension').textContent = '-' + window.WorkUtils.formatNumber(res.nationalPension) + '원';
+      document.getElementById('res-health').textContent = '-' + window.WorkUtils.formatNumber(res.healthInsurance) + '원';
+      document.getElementById('res-care').textContent = '-' + window.WorkUtils.formatNumber(res.longTermCare) + '원';
+      document.getElementById('res-employment').textContent = '-' + window.WorkUtils.formatNumber(res.employmentInsurance) + '원';
+      document.getElementById('res-income-tax').textContent = '-' + window.WorkUtils.formatNumber(res.incomeTax) + '원';
+      document.getElementById('res-local-tax').textContent = '-' + window.WorkUtils.formatNumber(res.localTax) + '원';
+      document.getElementById('res-total-deductions').textContent = '-' + window.WorkUtils.formatNumber(res.totalDeductions) + '원';
+
+      var rate = res.monthlyGross > 0 ? ((res.totalDeductions / res.monthlyGross) * 100).toFixed(1) : 0;
+      document.getElementById('res-deduction-rate').textContent = rate + '%';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var tabAnnual = document.getElementById('tab-annual');
+      var tabMonthly = document.getElementById('tab-monthly');
+      var labelAmount = document.getElementById('label-amount');
+      var inputAmount = document.getElementById('input-amount');
+      var inputNonTaxable = document.getElementById('input-non-taxable');
+      var form = document.getElementById('salary-form');
+      var btnReset = document.getElementById('btn-reset');
+
+      tabAnnual.addEventListener('click', function () {
+        if (!isMonthlyMode) return;
+        isMonthlyMode = false;
+        tabAnnual.classList.add('active');
+        tabMonthly.classList.remove('active');
+        labelAmount.textContent = '계약 연봉 금액';
+        inputAmount.value = '40,000,000';
+        runSalaryCalculation();
+      });
+
+      tabMonthly.addEventListener('click', function () {
+        if (isMonthlyMode) return;
+        isMonthlyMode = true;
+        tabMonthly.classList.add('active');
+        tabAnnual.classList.remove('active');
+        labelAmount.textContent = '월 기본급 (세전)';
+        inputAmount.value = '3,333,333';
+        runSalaryCalculation();
+      });
+
+      inputAmount.addEventListener('input', function () { formatInputCurrency(inputAmount); });
+      inputNonTaxable.addEventListener('input', function () { formatInputCurrency(inputNonTaxable); });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runSalaryCalculation();
+      });
+
+      btnReset.addEventListener('click', function () {
+        inputAmount.value = isMonthlyMode ? '3,333,333' : '40,000,000';
+        inputNonTaxable.value = '200,000';
+        document.getElementById('input-dependents').value = '1';
+        document.getElementById('input-children').value = '0';
+        runSalaryCalculation();
+      });
+
+      // 초기 실행
+      runSalaryCalculation();
+    });
+  </script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>업무 메모 체크리스트 - 직장인 업무도구</title>
+  <meta name="description" content="오늘의 할 일과 업무 메모를 브라우저에 안전하게 저장하고 관리해보세요.">
+  <meta name="keywords" content="업무 메모장, 직장인 체크리스트, 오늘 할 일, 투두리스트, 업무 일정 관리">
+  <link rel="canonical" href="https://work.chatgpts.kr/memo">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="업무 메모 체크리스트 - 직장인 업무도구">
+  <meta property="og:description" content="오늘의 할 일과 업무 메모를 브라우저에 안전하게 저장하고 관리해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/memo">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%93%9D%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip active">📝 업무 메모</a>
+    </nav>
+
+    <!-- 메모장 컨테이너 -->
+    <div class="memo-wrap">
+      
+      <div class="calc-box" style="margin-bottom:24px;">
+        <h1 class="calc-box-title"><i class="fa-solid fa-list-check" style="color:var(--color-primary);"></i> 오늘 할 일 &amp; 업무 메모</h1>
+
+        <!-- 입력창 -->
+        <div class="memo-input-row">
+          <input type="text" id="memo-input" class="memo-input" placeholder="오늘 완료할 업무나 메모를 입력하세요 (Enter)" autocomplete="off">
+          <button type="button" id="memo-add-btn" class="memo-add-btn"><i class="fa-solid fa-plus"></i> 추가</button>
+        </div>
+
+        <!-- 상태 및 일괄 정리 바 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding:0 4px;">
+          <span id="memo-count-text" style="font-size:0.88rem; font-weight:700; color:var(--color-text-soft);">0개 항목</span>
+          <button type="button" id="memo-clear-done-btn" class="btn-outline" style="padding:6px 12px; font-size:0.82rem;">
+            <i class="fa-solid fa-broom"></i> 완료 항목 정리
+          </button>
+        </div>
+
+        <!-- 체크리스트 목록 컨테이너 -->
+        <div class="memo-list" id="memo-list">
+          <!-- JS에서 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 데이터 보안 안내 -->
+      <div class="disclaimer-card" style="margin-top:0;">
+        <strong>🔒 개인정보 및 데이터 보안 안내</strong>
+        작성하신 업무 메모는 외부 서버로 일체 전송되지 않으며, 현재 사용 중인 브라우저의 <strong>로컬 저장소(localStorage)</strong>에만 안전하게 보관됩니다. 
+        브라우저 쿠키나 캐시를 모두 삭제하기 전까지 데이터가 유지됩니다.
+      </div>
+
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/memo.js"></script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

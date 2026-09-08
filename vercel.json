@@ -1,0 +1,53 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/salary",
+      "destination": "/salary.html"
+    },
+    {
+      "source": "/retirement",
+      "destination": "/retirement.html"
+    },
+    {
+      "source": "/annual-leave",
+      "destination": "/annual-leave.html"
+    },
+    {
+      "source": "/hourly",
+      "destination": "/hourly.html"
+    },
+    {
+      "source": "/workdays",
+      "destination": "/workdays.html"
+    },
+    {
+      "source": "/memo",
+      "destination": "/memo.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

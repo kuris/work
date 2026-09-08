@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>시급 월급 계산기 - 직장인 업무도구</title>
+  <meta name="description" content="시급, 근무시간, 근무일수를 입력해 예상 주급과 월급을 계산해보세요.">
+  <meta name="keywords" content="시급 계산기, 월급 계산기, 주휴수당 계산, 2026 최저시급, 알바 월급 계산, 시급 역산">
+  <link rel="canonical" href="https://work.chatgpts.kr/hourly">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="시급 월급 계산기 - 직장인 업무도구">
+  <meta property="og:description" content="시급, 근무시간, 근무일수를 입력해 예상 주급과 월급을 계산해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/hourly">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%E2%8F%B0%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip active">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 계산기 폼 & 결과 컨테이너 -->
+    <div class="calc-container">
+      
+      <!-- 입력 폼 -->
+      <section class="calc-box" aria-label="시급 정보 입력">
+        <h1 class="calc-box-title"><i class="fa-solid fa-clock" style="color:var(--color-primary);"></i> 시급 및 근무시간 정보</h1>
+
+        <!-- 모드 토글 탭 -->
+        <div class="toggle-tabs">
+          <button type="button" class="toggle-tab-btn active" id="tab-hourly-to-monthly">시급 ➔ 월급 계산</button>
+          <button type="button" class="toggle-tab-btn" id="tab-monthly-to-hourly">월급 ➔ 시급 역산</button>
+        </div>
+
+        <!-- 1) 시급 -> 월급 폼 -->
+        <form id="hourly-form">
+          <div class="form-group">
+            <label for="input-hourly-wage" class="form-label">적용 시급</label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-hourly-wage" class="form-input" value="10,030" inputmode="numeric" required>
+              <span class="input-unit">원</span>
+            </div>
+            <!-- 프리셋 -->
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setHourlyPreset(10030)">2026 최저(10,030원)</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setHourlyPreset(11000)">11,000원</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setHourlyPreset(12000)">12,000원</button>
+              <button type="button" class="btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="setHourlyPreset(15000)">15,000원</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label for="input-daily-hours" class="form-label">하루 근무시간</label>
+              <div class="form-input-wrap">
+                <input type="number" id="input-daily-hours" class="form-input" value="8" min="1" max="24" step="0.5" required>
+                <span class="input-unit">시간</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="input-weekly-days" class="form-label">1주일 근무일수</label>
+              <div class="form-input-wrap">
+                <input type="number" id="input-weekly-days" class="form-input" value="5" min="1" max="7" required>
+                <span class="input-unit">일</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:4px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700;">
+              <input type="checkbox" id="check-holiday-pay" checked style="width:18px; height:18px; accent-color:var(--color-primary);">
+              <span>주휴수당 포함 <small style="color:var(--color-text-soft); font-weight:400;">(주 15시간 이상 근무 시 법정 유급휴일)</small></span>
+            </label>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 예상 월급 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset-hourly">기본값</button>
+          </div>
+        </form>
+
+        <!-- 2) 월급 -> 시급 역산 폼 (기본 숨김) -->
+        <form id="reverse-form" style="display:none;">
+          <div class="form-group">
+            <label for="input-monthly-gross" class="form-label">월 기본급 (세전)</label>
+            <div class="form-input-wrap">
+              <input type="text" id="input-monthly-gross" class="form-input" value="2,500,000" inputmode="numeric" required>
+              <span class="input-unit">원</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-reverse-weekly-hours" class="form-label">주간 소정근로시간 <small>(기본 40시간 ➔ 월 209시간)</small></label>
+            <div class="form-input-wrap">
+              <input type="number" id="input-reverse-weekly-hours" class="form-input" value="40" min="1" max="52" required>
+              <span class="input-unit">시간</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-calculator"></i> 환산 시급 계산하기</button>
+            <button type="button" class="btn-outline" id="btn-reset-reverse">기본값</button>
+          </div>
+        </form>
+
+      </section>
+
+      <!-- 계산 결과 -->
+      <section class="result-card" aria-label="계산 결과">
+        
+        <!-- 시급 -> 월급 결과 뷰 -->
+        <div id="view-res-hourly">
+          <div class="result-hero-box">
+            <div class="result-hero-label">예상 월 급여 (세전)</div>
+            <div class="result-hero-amount" id="res-monthly-pay">2,096,270원</div>
+            <div class="result-hero-sub" id="res-weekly-pay">예상 주급: 약 481,440원</div>
+          </div>
+
+          <table class="result-table">
+            <tbody>
+              <tr>
+                <th>적용 시급</th>
+                <td id="res-applied-hourly">10,030원</td>
+              </tr>
+              <tr>
+                <th>주간 실제 근로시간</th>
+                <td id="res-work-hours">40.0시간</td>
+              </tr>
+              <tr>
+                <th>주휴수당 인정 시간</th>
+                <td id="res-holiday-hours" style="color:var(--color-primary);">+8.0시간</td>
+              </tr>
+              <tr>
+                <th>주당 총 유급 인정시간</th>
+                <td id="res-total-weekly-hours">48.0시간</td>
+              </tr>
+              <tr class="total-row">
+                <th>월 소정 유급 근로시간</th>
+                <td id="res-monthly-hours" style="color:var(--color-primary-dark);">약 209시간</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 월급 -> 시급 역산 결과 뷰 -->
+        <div id="view-res-reverse" style="display:none;">
+          <div class="result-hero-box">
+            <div class="result-hero-label">환산 시급</div>
+            <div class="result-hero-amount" id="res-reverse-hourly" style="color:var(--color-primary);">11,962원</div>
+            <div class="result-hero-sub" id="res-min-wage-badge" style="color:var(--color-success); font-weight:700;">✓ 2026년 최저시급(10,030원) 이상</div>
+          </div>
+
+          <table class="result-table">
+            <tbody>
+              <tr>
+                <th>월 기본급</th>
+                <td id="res-reverse-monthly">2,500,000원</td>
+              </tr>
+              <tr>
+                <th>월 산정 유급시간 (주휴 포함)</th>
+                <td id="res-reverse-hours">약 209시간</td>
+              </tr>
+              <tr class="total-row">
+                <th>1시간당 환산 임금</th>
+                <td id="res-reverse-final" style="color:var(--color-primary-dark);">11,962원 / 시간</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 주휴수당 및 최저임금 기준 안내</strong>
+      2026년 법정 최저시급은 <strong>10,030원</strong>입니다.
+      근로기준법 제55조에 따라 1주일 동안 소정의 근로일수를 개근하고 주 15시간 이상 근무한 근로자에게는 1주일에 평균 1회 이상의 유급휴일(주휴수당)을 부여해야 합니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/calculators.js"></script>
+  <script>
+    var isReverseMode = false;
+
+    function setHourlyPreset(val) {
+      document.getElementById('input-hourly-wage').value = window.WorkUtils.formatNumber(val);
+      runHourlyCalculation();
+    }
+
+    function runHourlyCalculation() {
+      var hourly = window.WorkUtils.parseNumber(document.getElementById('input-hourly-wage').value);
+      var dailyHours = parseFloat(document.getElementById('input-daily-hours').value) || 8;
+      var weeklyDays = parseInt(document.getElementById('input-weekly-days').value, 10) || 5;
+      var includeHoliday = document.getElementById('check-holiday-pay').checked;
+
+      var res = window.WorkCalculators.calculateHourlyWage(hourly, dailyHours, weeklyDays, includeHoliday);
+
+      document.getElementById('res-monthly-pay').textContent = window.WorkUtils.formatNumber(res.monthlyPay) + '원';
+      document.getElementById('res-weekly-pay').textContent = '예상 주급: 약 ' + window.WorkUtils.formatNumber(res.weeklyPay) + '원';
+      document.getElementById('res-applied-hourly').textContent = window.WorkUtils.formatNumber(res.hourlyWage) + '원';
+      document.getElementById('res-work-hours').textContent = res.weeklyWorkHours.toFixed(1) + '시간';
+      document.getElementById('res-holiday-hours').textContent = '+' + res.holidayHours.toFixed(1) + '시간';
+      document.getElementById('res-total-weekly-hours').textContent = res.totalWeeklyPaidHours.toFixed(1) + '시간';
+      document.getElementById('res-monthly-hours').textContent = '약 ' + res.monthlyPaidHours + '시간';
+    }
+
+    function runReverseCalculation() {
+      var monthly = window.WorkUtils.parseNumber(document.getElementById('input-monthly-gross').value);
+      var weeklyHours = parseFloat(document.getElementById('input-reverse-weekly-hours').value) || 40;
+
+      var res = window.WorkCalculators.calculateMonthlyToHourly(monthly, weeklyHours);
+
+      document.getElementById('res-reverse-hourly').textContent = window.WorkUtils.formatNumber(res.hourlyEquivalent) + '원';
+      document.getElementById('res-reverse-final').textContent = window.WorkUtils.formatNumber(res.hourlyEquivalent) + '원 / 시간';
+      document.getElementById('res-reverse-monthly').textContent = window.WorkUtils.formatNumber(res.monthlyWage) + '원';
+      document.getElementById('res-reverse-hours').textContent = '약 ' + res.monthlyHours + '시간';
+
+      var badge = document.getElementById('res-min-wage-badge');
+      if (res.hourlyEquivalent >= window.CALC_CONFIG.MIN_HOURLY_WAGE) {
+        badge.textContent = '✓ 2026년 최저시급(' + window.WorkUtils.formatNumber(window.CALC_CONFIG.MIN_HOURLY_WAGE) + '원) 이상';
+        badge.style.color = 'var(--color-success)';
+      } else {
+        badge.textContent = '⚠️ 2026년 최저시급(' + window.WorkUtils.formatNumber(window.CALC_CONFIG.MIN_HOURLY_WAGE) + '원) 미달';
+        badge.style.color = 'var(--color-danger)';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var tabH2M = document.getElementById('tab-hourly-to-monthly');
+      var tabM2H = document.getElementById('tab-monthly-to-hourly');
+      var formHourly = document.getElementById('hourly-form');
+      var formReverse = document.getElementById('reverse-form');
+      var viewHourly = document.getElementById('view-res-hourly');
+      var viewReverse = document.getElementById('view-res-reverse');
+
+      var inputHourly = document.getElementById('input-hourly-wage');
+      var inputReverseMonthly = document.getElementById('input-monthly-gross');
+
+      inputHourly.addEventListener('input', function () { inputHourly.value = window.WorkUtils.formatNumber(window.WorkUtils.parseNumber(inputHourly.value)); });
+      inputReverseMonthly.addEventListener('input', function () { inputReverseMonthly.value = window.WorkUtils.formatNumber(window.WorkUtils.parseNumber(inputReverseMonthly.value)); });
+
+      tabH2M.addEventListener('click', function () {
+        if (!isReverseMode) return;
+        isReverseMode = false;
+        tabH2M.classList.add('active');
+        tabM2H.classList.remove('active');
+        formHourly.style.display = 'block';
+        formReverse.style.display = 'none';
+        viewHourly.style.display = 'block';
+        viewReverse.style.display = 'none';
+        runHourlyCalculation();
+      });
+
+      tabM2H.addEventListener('click', function () {
+        if (isReverseMode) return;
+        isReverseMode = true;
+        tabM2H.classList.add('active');
+        tabH2M.classList.remove('active');
+        formHourly.style.display = 'none';
+        formReverse.style.display = 'block';
+        viewHourly.style.display = 'none';
+        viewReverse.style.display = 'block';
+        runReverseCalculation();
+      });
+
+      formHourly.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runHourlyCalculation();
+      });
+
+      formReverse.addEventListener('submit', function (e) {
+        e.preventDefault();
+        runReverseCalculation();
+      });
+
+      document.getElementById('btn-reset-hourly').addEventListener('click', function () {
+        inputHourly.value = '10,030';
+        document.getElementById('input-daily-hours').value = '8';
+        document.getElementById('input-weekly-days').value = '5';
+        document.getElementById('check-holiday-pay').checked = true;
+        runHourlyCalculation();
+      });
+
+      document.getElementById('btn-reset-reverse').addEventListener('click', function () {
+        inputReverseMonthly.value = '2,500,000';
+        document.getElementById('input-reverse-weekly-hours').value = '40';
+        runReverseCalculation();
+      });
+
+      runHourlyCalculation();
+    });
+  </script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>직장인 업무도구 - 연봉 실수령액, 퇴직금, 연차 계산기</title>
+  <meta name="description" content="직장인을 위한 무료 업무 계산기 모음입니다. 연봉 실수령액, 퇴직금, 연차, 시급, 근무일수를 간편하게 계산해보세요.">
+  <meta name="keywords" content="연봉 계산기, 실수령액 계산기, 퇴직금 계산기, 연차 계산기, 시급 계산기, 근무일수 계산기, 직장인 도구">
+  <link rel="canonical" href="https://work.chatgpts.kr/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="직장인 업무도구">
+  <meta property="og:title" content="직장인 업무도구 - 연봉 실수령액, 퇴직금, 연차 계산기">
+  <meta property="og:description" content="직장인을 위한 무료 업무 계산기 모음입니다. 연봉 실수령액, 퇴직금, 연차, 시급, 근무일수를 간편하게 계산해보세요.">
+  <meta property="og:url" content="https://work.chatgpts.kr/">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%92%BC%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- 헤더 -->
+    <header class="site-head">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">💼</span>
+        <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
+      </a>
+      <div class="header-right">
+        <div class="family-nav-wrap">
+          <button type="button" class="family-btn" id="family-btn">
+            다른 놀자 서비스 ▾
+          </button>
+          <div class="family-dropdown" id="family-dropdown">
+            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
+            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
+            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
+            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
+            <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
+            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 상단 스크롤 메뉴 -->
+    <nav class="nav-scroll" aria-label="메인 메뉴">
+      <a href="index.html" class="nav-chip active">🏠 홈</a>
+      <a href="salary.html" class="nav-chip">💰 연봉 실수령액</a>
+      <a href="retirement.html" class="nav-chip">🏦 퇴직금 계산기</a>
+      <a href="annual-leave.html" class="nav-chip">🏖️ 연차 계산기</a>
+      <a href="hourly.html" class="nav-chip">⏰ 시급/월급 계산기</a>
+      <a href="workdays.html" class="nav-chip">📅 근무일수 계산기</a>
+      <a href="memo.html" class="nav-chip">📝 업무 메모</a>
+    </nav>
+
+    <!-- 히어로 배너 -->
+    <section class="page-hero">
+      <span class="hero-tag">스마트한 직장 생활의 시작</span>
+      <h1 class="hero-title">직장인을 위한 간편 실무 도구 모음</h1>
+      <p class="hero-subtitle">
+        복잡한 세금과 4대보험 공제액부터 연차, 퇴직금, 시급, 근무일수까지<br>
+        직장인에게 꼭 필요한 계산기와 메모장을 한곳에서 빠르고 편리하게 이용하세요.
+      </p>
+    </section>
+
+    <!-- 도구 그리드 -->
+    <section class="tool-grid" aria-label="업무 도구 목록">
+      
+      <!-- 1. 연봉 실수령액 -->
+      <a href="salary.html" class="tool-card">
+        <div class="tool-card-icon"><i class="fa-solid fa-calculator"></i></div>
+        <h2 class="tool-card-title">연봉 실수령액 계산기</h2>
+        <p class="tool-card-desc">연봉이나 월급을 입력하면 4대보험과 소득세를 공제한 실제 월 입금액을 한눈에 계산해 드립니다.</p>
+        <span class="tool-card-btn">계산하러 가기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 2. 퇴직금 -->
+      <a href="retirement.html" class="tool-card">
+        <div class="tool-card-icon" style="color:#059669; background:#ECFDF5;"><i class="fa-solid fa-vault"></i></div>
+        <h2 class="tool-card-title">퇴직금 계산기</h2>
+        <p class="tool-card-desc">입사일과 퇴사일, 최근 3개월 급여를 바탕으로 근속기간과 법정 예상 퇴직금을 즉시 계산합니다.</p>
+        <span class="tool-card-btn">계산하러 가기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 3. 연차 -->
+      <a href="annual-leave.html" class="tool-card">
+        <div class="tool-card-icon" style="color:#D97706; background:#FFFBEB;"><i class="fa-solid fa-umbrella-beach"></i></div>
+        <h2 class="tool-card-title">연차 계산기</h2>
+        <p class="tool-card-desc">근로기준법 제60조 기준에 맞춰 1년 미만 월차 및 1년 이상 정기 연차와 남은 휴가 일수를 계산합니다.</p>
+        <span class="tool-card-btn">계산하러 가기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 4. 시급/월급 -->
+      <a href="hourly.html" class="tool-card">
+        <div class="tool-card-icon" style="color:#7C3AED; background:#EDE9FE;"><i class="fa-solid fa-clock"></i></div>
+        <h2 class="tool-card-title">시급/월급 계산기</h2>
+        <p class="tool-card-desc">최저시급과 주휴수당(주 15시간 이상)을 반영한 주급/월급 환산 및 월급의 시급 역산 기능을 제공합니다.</p>
+        <span class="tool-card-btn">계산하러 가기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 5. 근무일수 -->
+      <a href="workdays.html" class="tool-card">
+        <div class="tool-card-icon" style="color:#0284C7; background:#E0F2FE;"><i class="fa-solid fa-calendar-days"></i></div>
+        <h2 class="tool-card-title">근무일수 계산기</h2>
+        <p class="tool-card-desc">프로젝트 기간이나 근속 기간 중 주말(토/일)을 제외한 실제 평일 영업일수를 간편하게 산출합니다.</p>
+        <span class="tool-card-btn">계산하러 가기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 6. 업무 메모 -->
+      <a href="memo.html" class="tool-card">
+        <div class="tool-card-icon" style="color:#EA580C; background:#FFF7ED;"><i class="fa-solid fa-list-check"></i></div>
+        <h2 class="tool-card-title">업무 메모 &amp; 할 일</h2>
+        <p class="tool-card-desc">오늘의 핵심 업무와 체크리스트를 브라우저에 안전하게 저장하고 완료 여부를 체크할 수 있습니다.</p>
+        <span class="tool-card-btn">메모 작성하기 <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <!-- 준비 중 1 -->
+      <div class="tool-card coming-soon">
+        <div class="tool-card-icon" style="color:#64748B; background:#F1F5F9;"><i class="fa-solid fa-business-time"></i></div>
+        <h2 class="tool-card-title" style="color:#64748B;">야근 / 휴일근로수당 계산기</h2>
+        <p class="tool-card-desc">통상임금 기준 연장·야간·휴일근로 가산수당(1.5배~2배) 계산 기능이 곧 추가될 예정입니다.</p>
+        <span class="tool-card-btn" style="color:#94A3B8; background:#F1F5F9; border-color:#E2E8F0;">준비 중</span>
+      </div>
+
+      <!-- 준비 중 2 -->
+      <div class="tool-card coming-soon">
+        <div class="tool-card-icon" style="color:#64748B; background:#F1F5F9;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+        <h2 class="tool-card-title" style="color:#64748B;">실업급여 모의계산기</h2>
+        <p class="tool-card-desc">퇴사 전 평균임금과 고용보험 가입기간, 연령에 따른 구직급여 일액과 지급일수 계산 기능입니다.</p>
+        <span class="tool-card-btn" style="color:#94A3B8; background:#F1F5F9; border-color:#E2E8F0;">준비 중</span>
+      </div>
+
+    </section>
+
+    <!-- 법적 면책 안내 -->
+    <div class="disclaimer-card">
+      <strong>※ 이용 시 참고사항 및 법적 면책 안내</strong>
+      직장인 업무도구의 모든 계산기는 관련 세법 및 근로기준법을 바탕으로 한 참고용 간이 추정치입니다. 
+      실제 급여, 4대보험료, 퇴직금, 연차 일수는 개별 회사의 취업규칙, 근로계약서, 비과세 항목, 세부 공제 조건에 따라 차이가 발생할 수 있습니다.
+      정확한 법률적·세무적 의사결정은 소속 회사의 인사/총무 담당자 또는 공인노무사·세무사의 확인을 권장합니다.
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="site-foot">
+      <div class="footer-family-links">
+        <a href="https://chatgpts.kr" target="_blank" rel="noopener">전체 도구 (chatgpts.kr)</a> ·
+        <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">한자야 놀자</a> ·
+        <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">단어야 놀자</a> ·
+        <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">역사야 놀자</a> ·
+        <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">운세야 놀자</a> ·
+        <a href="https://mindtest.chatgpts.kr" target="_blank" rel="noopener">마인드테스트</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 직장인 업무도구 (work.chatgpts.kr) · All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/common.js"></script>
+  <!-- 화면 조회 통계 로그 수집 -->
+  <script defer src="js/supabase-config.js"></script>
+  <script defer src="js/track.js" data-service="work"></script>
+</body>
+</html>

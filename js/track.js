@@ -30,10 +30,13 @@
     var file = location.pathname.split('/').pop() || 'index.html';
     if (file === 'admin.html' || file === 'admin') return;
 
-    // result/burnout-1.html 처럼 하위 폴더까지 포함한 경로를 기록합니다.
-    var pathParts = location.pathname.replace(/^\/+/, '').split('/');
-    var relPath = pathParts.filter(Boolean).join('/') || 'index.html';
-    if (!/\.[a-zA-Z0-9]+$/.test(relPath)) relPath = relPath + (relPath.slice(-1) === '/' ? 'index.html' : '');
+    // 경로 정규화
+    //  - result/burnout-1.html 처럼 하위 폴더까지 포함해 기록합니다.
+    //  - Vercel cleanUrls 때문에 같은 화면이 '/quiz' 와 '/quiz.html' 로 나뉘어
+    //    집계가 갈리므로, 항상 '.html' 을 붙인 형태로 통일합니다.
+    var relPath = location.pathname.replace(/^\/+/, '');
+    if (relPath === '' || relPath.slice(-1) === '/') relPath += 'index.html';
+    else if (!/\.[a-zA-Z0-9]+$/.test(relPath)) relPath += '.html';
     var pagePath = '/' + relPath;
 
     var title = (document.title || '').split(/\s[-|｜]\s/)[0].trim() || relPath;

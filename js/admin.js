@@ -28,12 +28,14 @@
 
   // 다른 프로젝트 관리자 페이지 목록 (서비스 전환용)
   const SERVICES = [
-    { key: 'hanja',    name: '한자야 놀자!',   emoji: '漢', url: 'https://hanja.chatgpts.kr/admin' },
-    { key: 'voca',     name: '단어야 놀자!',   emoji: '單', url: 'https://voca.chatgpts.kr/admin' },
-    { key: 'history',  name: '역사야 놀자!',   emoji: '史', url: 'https://history.chatgpts.kr/admin' },
-    { key: 'fortune',  name: '운세야 놀자!',   emoji: '運', url: 'https://fortune.chatgpts.kr/admin' },
-    { key: 'mindtest', name: '마인드테스트',   emoji: '心', url: 'https://mindtest.chatgpts.kr/admin' },
-    { key: 'work',     name: '직장인 업무도구', emoji: '💼', url: 'https://work.chatgpts.kr/admin' }
+    { key: 'hanja',    name: '한자야 놀자!',     emoji: '漢', url: 'https://hanja.chatgpts.kr/admin' },
+    { key: 'voca',     name: '단어야 놀자!',     emoji: '單', url: 'https://voca.chatgpts.kr/admin' },
+    { key: 'history',  name: '역사야 놀자!',     emoji: '史', url: 'https://history.chatgpts.kr/admin' },
+    { key: 'fortune',  name: '운세야 놀자!',     emoji: '運', url: 'https://fortune.chatgpts.kr/admin' },
+    { key: 'mindtest', name: '마인드테스트',     emoji: '心', url: 'https://mindtest.chatgpts.kr/admin' },
+    { key: 'work',     name: '워크야 놀자',     emoji: '職', url: 'https://work.chatgpts.kr/admin' },
+    { key: 'money',    name: '머니야 놀자',     emoji: '財', url: 'https://money.chatgpts.kr/admin' },
+    { key: 'tools',    name: '문서야 놀자',     emoji: '文', url: 'https://tools.chatgpts.kr/admin' }
   ];
 
   const sb = () => window.sbAdmin || null;
@@ -130,9 +132,20 @@
     return `<tr><td colspan="${colspan}">${emptyBox(message, sub)}</td></tr>`;
   }
 
+  // 경로 정규화
+  // Vercel cleanUrls 때문에 같은 화면이 '/quiz' 와 '/quiz.html' 로 나뉘어 기록될 수
+  // 있습니다. 표시·집계 단계에서 '.html' 형태로 통일해 하나로 합칩니다.
+  // (track.js 수정 이전에 쌓인 로그도 함께 병합됩니다)
+  function normalizePath(path) {
+    let clean = String(path || '').replace(/^\/+/, '');
+    if (clean === '' || clean.slice(-1) === '/') clean += 'index.html';
+    else if (!/\.[a-zA-Z0-9]+$/.test(clean)) clean += '.html';
+    return clean;
+  }
+
   // 화면 경로 → 사람이 읽는 이름
   function pageTitleOf(path, fallbackTitle) {
-    const clean = String(path || '').replace(/^\//, '') || 'index.html';
+    const clean = normalizePath(path);
     const map = CFG.pageTitles || {};
     if (map[clean]) return map[clean];
     // result/burnout-1.html 처럼 하위 폴더인 경우 폴더 규칙으로 한 번 더 시도
@@ -526,7 +539,7 @@
     const daysMap = {};
 
     list.forEach(function (r) {
-      const p = String(r.path || '').replace(/^\//, '') || 'index.html';
+      const p = normalizePath(r.path);
       if (!pagesMap[p]) {
         pagesMap[p] = { path: p, title: r.page_title || '', count: 0, users: {}, last: r.created_at };
       }
@@ -659,7 +672,7 @@
     }
 
     node.innerHTML = list.slice(0, 20).map(function (r) {
-      const p = String(r.path || '').replace(/^\//, '');
+      const p = normalizePath(r.path);
       return `
         <div class="admin-feed-item">
           <div>
@@ -1005,12 +1018,12 @@
     const seen = {};
     const out = [];
     cachedPageViews.forEach(function (r) {
-      const p = String(r.path || '').replace(/^\//, '');
+      const p = normalizePath(r.path);
       if (seen[p]) return;
       const title = pageTitleOf(p, r.page_title);
       if (p.toLowerCase().indexOf(lower) === -1 && String(title).indexOf(q) === -1) return;
       seen[p] = 1;
-      const count = cachedPageViews.filter(x => String(x.path || '').replace(/^\//, '') === p).length;
+      const count = cachedPageViews.filter(x => normalizePath(x.path) === p).length;
       out.push(`<strong>${escapeHtml(title)}</strong> <code>/${escapeHtml(p)}</code> — 최근 로그 ${num(count)}회`);
     });
     // 로그에 없더라도 설정된 화면 목록에서 이름으로 찾기

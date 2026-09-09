@@ -757,7 +757,9 @@
       box.innerHTML =
         '<div class="cg-rec-head"><span class="cg-rec-h">' + esc(cfg.title || '내 기록') + '</span></div>' +
         '<p class="cg-rec-guest">' + esc(cfg.guestText || '로그인하면 기록이 계정에 저장돼 다른 기기에서도 이어서 볼 수 있어요.') + '</p>' +
-        '<button type="button" class="cg-auth-google" data-cg="login">' + G_SVG + '<span>Google로 로그인</span></button>';
+        // 헤더에 이미 같은 Google 버튼이 있으므로, 여기서는 큰 버튼 대신
+        // 텍스트 링크만 둡니다. (한 화면에 로그인 버튼이 두 개 뜨던 문제)
+        '<button type="button" class="cg-rec-login" data-cg="login">Google로 로그인 →</button>';
       return;
     }
 

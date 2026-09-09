@@ -237,9 +237,31 @@
 .cg-rec-more:hover { text-decoration: underline; }
 
 .cg-rec-guest {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   font-size: 13px;
   color: var(--cg-muted, #7b8189);
+}
+
+/* 최근기록 패널의 로그인 유도.
+   헤더에 이미 Google 버튼이 있으므로 여기서는 텍스트 링크로만 둡니다.
+   (터치 영역 확보를 위해 세로 패딩은 남깁니다) */
+.cg-rec-login {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cg-accent, #2563eb);
+  cursor: pointer;
+}
+.cg-rec-login:hover,
+.cg-rec-login:focus-visible {
+  text-decoration: underline;
 }
 
 .cg-rec-loading,

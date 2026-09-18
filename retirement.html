@@ -23,6 +23,7 @@
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js?v=20260909e"></script>
   <link rel="stylesheet" href="css/cg-auth.css?v=20260909e">
+  <link rel="stylesheet" href="css/cg-family.css?v=20260909e">
 </head>
 <body>
   <div class="wrap">
@@ -33,23 +34,7 @@
         <span>직장인 <span style="color:var(--color-primary);">업무도구</span></span>
       </a>
       <div class="header-right">
-        <div class="family-nav-wrap">
-          <button type="button" class="family-btn" id="family-btn">
-            다른 놀자 서비스 ▾
-          </button>
-          <div class="family-dropdown" id="family-dropdown">
-            <a href="https://hanja.chatgpts.kr" target="_blank" rel="noopener">📖 한자야 놀자</a>
-            <a href="https://voca.chatgpts.kr" target="_blank" rel="noopener">⚡ 단어야 놀자</a>
-            <a href="https://history.chatgpts.kr" target="_blank" rel="noopener">📜 역사야 놀자</a>
-            <a href="https://fortune.chatgpts.kr" target="_blank" rel="noopener">🔮 운세야 놀자</a>
-            <a href="https://mind.chatgpts.kr" target="_blank" rel="noopener">🧠 마인드테스트</a>
-            <a href="https://money.chatgpts.kr" target="_blank" rel="noopener">💰 머니야 놀자</a>
-            <a href="https://tools.chatgpts.kr" target="_blank" rel="noopener">🛠️ 문서야 놀자</a>
-            <a href="https://bible.chatgpts.kr" target="_blank" rel="noopener">✝️ 성경아 놀자</a>
-            <a href="https://maum.chatgpts.kr" target="_blank" rel="noopener">🪷 마음아 놀자</a>
-            <a href="https://chatgpts.kr" target="_blank" rel="noopener">🏠 chatgpts.kr</a>
-          </div>
-        </div>
+        <div data-cg-family data-current="work"></div>
       </div>
     </header>
 
@@ -288,7 +273,4 @@
 <!-- 공통 Google 로그인 (CGAuth) - 비로그인 사용자의 기존 기능에는 영향이 없습니다 -->
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="js/cg-auth.js?v=20260909e" data-service="work" data-mount=".header-right" data-mount-mode="prepend"></script>
-<script defer src="js/cg-tools-recent.js?v=20260909e"></script>
-<script defer src="js/work-calc-log.js?v=20260909e"></script>
-</body>
-</html>
+<script defer src="js/cg-family.js?v=20260909e"></script>

@@ -1,0 +1,164 @@
+/* 이 파일은 _shared/cg-family.css 의 복사본입니다. 직접 수정하지 말고 _shared 에서 고친 뒤 sync.sh 를 실행하세요. */
+/* ============================================================
+   CGFamily - 15종 풀셋 드롭박스 스타일 (자립 네임스페이스 cg-fam-*)
+   ★ 원본: play_project/_shared/cg-family.css (복사본 직접 수정 금지)
+   기존 .family-* 규칙과 충돌하지 않도록 cg-fam-* 만 사용합니다.
+   ============================================================ */
+
+[data-cg-family] { display: contents; }
+
+/* 래퍼: 기존 .family-nav-wrap 역할을 대신합니다 */
+.cg-fam-wrap { position: relative; display: inline-block; }
+
+/* 버튼: 기존 .family-btn 룩 답습 (서비스 변수 물려받음) */
+.cg-fam-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cg-fam-fg, inherit);
+  background: var(--cg-fam-btn-bg, rgba(127, 127, 127, .08));
+  border: 1px solid var(--cg-fam-border, rgba(127, 127, 127, .25));
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s ease, border-color .15s ease;
+}
+.cg-fam-btn:hover { background: var(--cg-fam-btn-bg-hover, rgba(127, 127, 127, .16)); }
+.cg-fam-btn:focus-visible { outline: 2px solid var(--cg-accent, #4285f4); outline-offset: 2px; }
+.cg-fam-caret { font-size: 11px; transition: transform .18s ease; }
+.cg-fam-wrap.open .cg-fam-btn .cg-fam-caret { transform: rotate(180deg); }
+
+/* 패널: 3그룹 2열 격자, 15개+포털이 한 화면에 */
+.cg-fam-panel {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 352px;
+  max-width: calc(100vw - 24px);
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+  padding: 10px 10px 8px;
+  background: var(--cg-fam-bg, #fff);
+  border: 1px solid var(--cg-fam-border, rgba(0, 0, 0, .12));
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .16);
+  z-index: 300;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+}
+.cg-fam-wrap.open .cg-fam-panel { display: block; animation: cgFamIn .15s ease; }
+@keyframes cgFamIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.cg-fam-sec { margin-bottom: 8px; }
+.cg-fam-sec:last-of-type { margin-bottom: 4px; }
+.cg-fam-sec-t {
+  padding: 4px 8px 5px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: var(--cg-fam-muted, #7b8189);
+}
+.cg-fam-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.cg-fam-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  font-weight: 600;
+  color: var(--cg-fam-fg, #24292f);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+a.cg-fam-item:hover { background: var(--cg-fam-hover, rgba(0, 0, 0, .055)); }
+.cg-fam-ic { flex: 0 0 auto; font-size: 15px; }
+.cg-fam-current {
+  background: var(--cg-fam-cur-bg, rgba(37, 99, 235, .09));
+  color: var(--cg-fam-cur-fg, #1d4ed8);
+  cursor: default;
+}
+.cg-fam-current::after {
+  content: '현재';
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  opacity: .75;
+}
+.cg-fam-portal {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+  padding: 9px 10px 7px;
+  border-top: 1px solid var(--cg-fam-border, rgba(0, 0, 0, .08));
+  font-weight: 700;
+  color: var(--cg-fam-fg, #24292f);
+  text-decoration: none;
+  border-radius: 0 0 8px 8px;
+}
+.cg-fam-portal:hover { background: var(--cg-fam-hover, rgba(0, 0, 0, .055)); }
+
+/* 모바일: 좁은 화면에서 잘리지 않도록 fixed 전환 */
+@media (max-width: 640px) {
+  .cg-fam-panel {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 60px;
+    width: auto;
+    max-width: none;
+  }
+  .cg-fam-btn { padding: 7px 11px; font-size: 13px; }
+}
+
+/* 모바일 서랍용 평면 리스트 (gram/science nav.js) */
+.cg-fam-flat-sec { margin-bottom: 10px; }
+.cg-fam-flat-t {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--cg-fam-muted, #7b8189);
+  margin-bottom: 4px;
+}
+.cg-fam-flat-list { list-style: none; margin: 0; padding: 0; }
+.cg-fam-flat-list li { margin: 0; padding: 0; }
+.cg-fam-flat-list a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+.cg-fam-flat-list a:hover { background: rgba(127, 127, 127, .12); }
+.cg-fam-flat-cur {
+  display: block;
+  padding: 7px 10px;
+  font-weight: 700;
+  opacity: .65;
+}
+
+/* 기존 서비스 CSS 간섭 차단 */
+.cg-fam-wrap a, .cg-fam-wrap button, .cg-fam-wrap span {
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  transform: none;
+  box-shadow: none;
+  margin: 0;
+  float: none;
+}
+.cg-fam-wrap a:hover { transform: none; }

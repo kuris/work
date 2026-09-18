@@ -5,29 +5,8 @@
 (function () {
   'use strict';
 
-  // 1. 패밀리 드롭다운 토글
+  // 1. 패밀리 드롭다운 토글 (cg-family.js 가 자체 처리 — 구 family-btn 바인딩 제거됨)
   document.addEventListener('DOMContentLoaded', function () {
-    var familyBtn = document.getElementById('family-btn');
-    var familyDropdown = document.getElementById('family-dropdown');
-
-    if (familyBtn && familyDropdown) {
-      familyBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        familyDropdown.classList.toggle('show');
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!familyDropdown.contains(e.target) && e.target !== familyBtn) {
-          familyDropdown.classList.remove('show');
-        }
-      });
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          familyDropdown.classList.remove('show');
-        }
-      });
-    }
 
     // 2. 현재 활성화된 메뉴 칩 자동 active 처리 (URL 매칭)
     var currentPath = location.pathname.split('/').pop() || 'index.html';

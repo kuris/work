@@ -1,6 +1,6 @@
 /* 이 파일은 _shared/cg-family.css 의 복사본입니다. 직접 수정하지 말고 _shared 에서 고친 뒤 sync.sh 를 실행하세요. */
 /* ============================================================
-   CGFamily - 15종 풀셋 드롭박스 스타일 (자립 네임스페이스 cg-fam-*)
+   CGFamily - 14종 드롭박스 스타일 (자립 네임스페이스 cg-fam-*)
    ★ 원본: play_project/_shared/cg-family.css (복사본 직접 수정 금지)
    기존 .family-* 규칙과 충돌하지 않도록 cg-fam-* 만 사용합니다.
    ============================================================ */
@@ -32,7 +32,7 @@
 .cg-fam-caret { font-size: 11px; transition: transform .18s ease; }
 .cg-fam-wrap.open .cg-fam-btn .cg-fam-caret { transform: rotate(180deg); }
 
-/* 패널: 3그룹 2열 격자, 15개+포털이 한 화면에 */
+/* 패널: 3그룹 2열 격자, 14개+포털이 한 화면에 */
 .cg-fam-panel {
   display: none;
   position: absolute;

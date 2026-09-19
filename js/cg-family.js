@@ -1,8 +1,9 @@
 /* 이 파일은 _shared/cg-family.js 의 복사본입니다. 직접 수정하지 말고 _shared 에서 고친 뒤 sync.sh 를 실행하세요. */
 /* ============================================================
-   CGFamily - 15종 풀셋 "다른 놀자 서비스" 공통 드롭박스
+   CGFamily - 14종 "다른 놀자 서비스" 공통 드롭박스
    ★ 원본: play_project/_shared/cg-family.js (복사본 직접 수정 금지)
    수정 후 _shared/sync.sh 실행해 전 서비스에 배포합니다.
+   ※ cbt(전기기사 CBT)는 개인용이므로 메뉴에서 제외합니다.
 
    사용법 (정적 헤더형 - 3줄):
      <link rel="stylesheet" href="css/cg-family.css?v=...">   (</head> 직전)
@@ -21,7 +22,7 @@
   if (global.CGFamily && global.CGFamily.__loaded) return;
 
   var SERVICES = [
-    // 학습 (8)
+    // 학습 (7)
     { id: 'hanja', emoji: '📖', label: '한자야 놀자',    url: 'https://hanja.chatgpts.kr',    host: 'hanja.chatgpts.kr',    cat: 'study' },
     { id: 'voca',  emoji: '⚡', label: '단어야 놀자',    url: 'https://voca.chatgpts.kr',     host: 'voca.chatgpts.kr',     cat: 'study' },
     { id: 'history', emoji: '📜', label: '역사야 놀자',  url: 'https://history.chatgpts.kr',  host: 'history.chatgpts.kr',  cat: 'study' },
@@ -29,7 +30,6 @@
     { id: 'gram',  emoji: '✏️', label: '문법아 놀자',    url: 'https://gram.chatgpts.kr',     host: 'gram.chatgpts.kr',     cat: 'study' },
     { id: 'science', emoji: '🔬', label: '과학아 놀자',  url: 'https://science.chatgpts.kr',  host: 'science.chatgpts.kr',  cat: 'study' },
     { id: 'book',  emoji: '📚', label: '독서야 놀자',    url: 'https://book.chatgpts.kr',     host: 'book.chatgpts.kr',     cat: 'study' },
-    { id: 'cbt',   emoji: '⚡', label: '전기기사 CBT',   url: 'https://cbt.chatgpts.kr',      host: 'cbt.chatgpts.kr',      cat: 'study' },
     // 마음·재미 (4)
     { id: 'maum',  emoji: '🪷', label: '마음아 놀자',    url: 'https://maum.chatgpts.kr',     host: 'maum.chatgpts.kr',     cat: 'mind' },
     { id: 'bible', emoji: '✝️', label: '성경아 놀자',    url: 'https://bible.chatgpts.kr',    host: 'bible.chatgpts.kr',    cat: 'mind' },
